@@ -8,6 +8,7 @@ import com.company.utils.KeyboardKeys;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -124,10 +125,10 @@ public class JavaRobot {
             robot.setAutoDelay(40);
             robot.setAutoWaitForIdle(true);
 
-            robot.delay(1000);
+            robot.delay(500);
             robot.mouseMove(2, 2);
             leftClick();
-            robot.delay(500);
+            robot.delay(40);
             robot.keyPress(KeyEvent.VK_ENTER);
             robot.keyRelease(KeyEvent.VK_ENTER);
 
@@ -135,7 +136,7 @@ public class JavaRobot {
             robot.keyPress(KeyEvent.VK_ENTER);
             robot.keyRelease(KeyEvent.VK_ENTER);
 
-            System.out.println("..." + offerDealer + " was kicked...");
+            System.out.println("..." + offerDealer + " kicked...");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -183,7 +184,7 @@ public class JavaRobot {
                 temp = stashTab.currencyTab.get(i);
                 countStocks = calcCountStocks(countItems, temp.stock);                                          //calc N stocks to move in stash
                 left = countItems - countStocks * temp.stock;                                                     //left after moving full stocks
-                //System.out.println("need move :" + countStocks + " * " + temp.stock + " + left: " + left);
+                System.out.println("need move :" + countStocks + " * " + temp.stock + " + left: " + left);
             }
         }
         try {
@@ -205,7 +206,7 @@ public class JavaRobot {
                     leftClick();
                     robot.keyRelease(KeyEvent.VK_SHIFT);
                     robot.delay(100);
-                    robot.mouseMove(temp.x + 38, temp.y - 55);
+                    robot.mouseMove(temp.x + 36, temp.y - 64);
                     for (int i = 0; i < left - 1; i++) {                                               //moving unstocking count
                         leftClick();
                     }
@@ -297,10 +298,10 @@ public class JavaRobot {
             robot.setAutoDelay(40);
             robot.setAutoWaitForIdle(true);
 
-            robot.delay(1000);
+            robot.delay(40);
             robot.mouseMove(2, 2);
             leftClick();
-            robot.delay(500);
+            robot.delay(40);
             robot.mouseMove(394, 282);
             leftClick();
         } catch (Exception e) {
@@ -355,7 +356,6 @@ public class JavaRobot {
             for (int i = 0; i < countStocks / 5; i++) {
                 for (int j = 0; j < 5; j++) {
                     robot.mouseMove(startX, startY);
-                    robot.delay(50);
                     robot.keyPress(KeyEvent.VK_CONTROL);
                     leftClick();
                     robot.keyRelease(KeyEvent.VK_CONTROL);
@@ -367,7 +367,6 @@ public class JavaRobot {
             }
             for (int i = 0; i < (countStocks - 5 * (countStocks / 5) + 1); i++) {
                 robot.mouseMove(startX, startY);
-                robot.delay(50);
                 robot.keyPress(KeyEvent.VK_CONTROL);
                 leftClick();
                 robot.keyRelease(KeyEvent.VK_CONTROL);
@@ -383,31 +382,60 @@ public class JavaRobot {
             e.printStackTrace();
         }
 
-        //CHECKING INCOMNIG TRADEITEMS
-        try {
-            int countIncmin = countIncmincurrency;
-            int countStocks = 0;
-            int left = 0;
-            robot.setAutoDelay(40);
-            robot.setAutoWaitForIdle(true);
-            xyCurrency temp = new xyCurrency("", 1000, 1000, 0);
-            for (int i = 0; i < stashTab.currencyTab.size(); i++) {
-                if (currencyIncmin.toLowerCase().contains(stashTab.currencyTab.get(i).name.toLowerCase())) {
-                    temp = stashTab.currencyTab.get(i);
-                    countStocks = calcCountStocks(countIncmin, temp.stock);                                          //calc N stocks to move in stash
-                    left = countIncmin - countStocks * temp.stock;                                                     //left after moving full stocks
-                    System.out.println("need move :" + countStocks + " * " + temp.stock + " + left: " + left);
-                }
-            }
 
-            int received = 0;
-            int startX = 62;
-            int startY = 159;
-            robot.setAutoDelay(40);
-            robot.setAutoWaitForIdle(true);
-            robot.mouseMove(startX, startY);
-            for (int i = 0; i < countStocks / 5; i++) {
-                for (int j = 0; j < 5; j++) {
+        //CHECKING INCOMNIG TRADEITEMS
+
+        {/*
+            try {
+                int countIncmin = countIncmincurrency;
+                int countStocks = 0;
+                int left = 0;
+                robot.setAutoDelay(40);
+                robot.setAutoWaitForIdle(true);
+                xyCurrency temp = new xyCurrency("", 1000, 1000, 0);
+                for (int i = 0; i < stashTab.currencyTab.size(); i++) {
+                    if (currencyIncmin.toLowerCase().contains(stashTab.currencyTab.get(i).name.toLowerCase())) {
+                        temp = stashTab.currencyTab.get(i);
+                        countStocks = calcCountStocks(countIncmin, temp.stock);                                          //calc N stocks to move in stash
+                        left = countIncmin - countStocks * temp.stock;                                                     //left after moving full stocks
+                        System.out.println("need move :" + countStocks + " * " + temp.stock + " + left: " + left);
+                    }
+                }
+
+                int received = 0;
+                int startX = 62;
+                int startY = 159;
+                robot.setAutoDelay(40);
+                robot.setAutoWaitForIdle(true);
+                robot.mouseMove(startX, startY);
+                for (int i = 0; i < countStocks / 5; i++) {
+                    for (int j = 0; j < 5; j++) {
+                        robot.mouseMove(startX, startY);
+                        robot.keyPress(KeyEvent.VK_CONTROL);
+                        robot.delay(40);
+                        robot.keyPress(KeyEvent.VK_C);
+                        robot.delay(40);
+                        robot.keyRelease(KeyEvent.VK_C);
+                        robot.delay(40);
+                        robot.keyRelease(KeyEvent.VK_CONTROL);
+                        String infoCurrency = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString();
+                        if (infoCurrency.contains(currencyIncmin)) {
+                            infoCurrency = infoCurrency.substring(infoCurrency.indexOf("Stack Size: ") + "Stack Size: ".length(), infoCurrency.indexOf("/"));
+                            received += Integer.valueOf(infoCurrency);
+                        }
+                        startY = startY + 29;
+                    }
+                    startY = 159;
+                    startX = startX + 29;
+                }
+
+                int toMax = 0;
+                if (left > 0) {
+                    toMax = countStocks - 5 * (countStocks / 5) + 1;
+                } else {
+                    toMax = countStocks - 5 * (countStocks / 5);
+                }
+                for (int i = 0; i < toMax; i++) {
                     robot.mouseMove(startX, startY);
                     robot.keyPress(KeyEvent.VK_CONTROL);
                     robot.delay(40);
@@ -417,49 +445,98 @@ public class JavaRobot {
                     robot.delay(40);
                     robot.keyRelease(KeyEvent.VK_CONTROL);
                     String infoCurrency = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString();
-                    if (infoCurrency.contains(currencyIncmin)) {
+                    if (infoCurrency.toLowerCase().contains(currencyIncmin.toLowerCase())) {
                         infoCurrency = infoCurrency.substring(infoCurrency.indexOf("Stack Size: ") + "Stack Size: ".length(), infoCurrency.indexOf("/"));
                         received += Integer.valueOf(infoCurrency);
                     }
                     startY = startY + 29;
                 }
-                startY = 159;
-                startX = startX + 62;
-            }
 
-            int toMax = 0;
-            if (left > 0) {
-                toMax = countStocks - 5 * (countStocks / 5) + 1;
-            } else {
-                toMax = countStocks - 5 * (countStocks / 5);
-            }
-            for (int i = 0; i < toMax; i++) {
-                robot.mouseMove(startX, startY);
-                robot.keyPress(KeyEvent.VK_CONTROL);
-                robot.delay(40);
-                robot.keyPress(KeyEvent.VK_C);
-                robot.delay(40);
-                robot.keyRelease(KeyEvent.VK_C);
-                robot.delay(40);
-                robot.keyRelease(KeyEvent.VK_CONTROL);
-                String infoCurrency = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString();
-                if (infoCurrency.toLowerCase().contains(currencyIncmin.toLowerCase())) {
-                    infoCurrency = infoCurrency.substring(infoCurrency.indexOf("Stack Size: ") + "Stack Size: ".length(), infoCurrency.indexOf("/"));
-                    received += Integer.valueOf(infoCurrency);
+
+                System.out.println("RECEIVED :" + received);
+                if (received >= countIncmincurrency) {
+                    System.out.println("BERRRRY GOOD");
+                    robot.mouseMove(83, 496);
+                    leftClick();
+                } else {
+                    robot.mouseMove(358, 495);
+                    leftClick();
                 }
-                startY = startY + 29;
+            } catch (Exception e) {
+                System.err.println(e);
             }
-            System.out.println("RECEIVED :" + received);
-            if (received >= countIncmincurrency) {
-                System.out.println("BERRRRY GOOD");
-                robot.mouseMove(83, 496);
-                leftClick();
-            } else {
-                robot.mouseMove(358, 495);
-                leftClick();
+        }*/
+
+            {
+                try {
+                    String temp = "Rarity: Currency " + "Scroll of Wisdom " + "-------- " + "Stack Size: 40/40 " + "--------";
+                    int startX = 62;
+                    int startY = 159;
+                    int countIncmin = countIncmincurrency;
+                    int count = 0;
+                    robot.setAutoDelay(40);
+                    robot.setAutoWaitForIdle(true);
+                    robot.mouseMove(startX, startY);
+                    for (int i = 0; i < 12; i++) {
+                        for (int j = 0; j < 5; j++) {
+                            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(temp), null);
+                            robot.mouseMove(startX, startY);
+                            robot.keyPress(KeyEvent.VK_CONTROL);
+                            robot.keyPress(KeyEvent.VK_C);
+                            robot.delay(40);
+                            robot.keyRelease(KeyEvent.VK_C);
+                            robot.keyRelease(KeyEvent.VK_CONTROL);
+                            String infoCurrency = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString();
+                            if (infoCurrency.toLowerCase().contains(currencyIncmin.toLowerCase())) {
+                                infoCurrency = infoCurrency.substring(infoCurrency.indexOf("Stack Size: ") + "Stack Size: ".length(), infoCurrency.indexOf("/"));
+                                count += Integer.valueOf(infoCurrency);
+                            }
+                            startY = startY + 29;
+                            if (count >= countIncmin) {
+                                break;
+                            }
+                        }
+                        startY = 159;
+                        startX = startX + 29;
+                        if (count >= countIncmin) {
+                            break;
+                        }
+                    }
+
+                    LogListener listenerForTradeCalncel = new LogListener(Main.pathLog);
+
+                    System.out.println("RECEIVED :" + count);
+                    if (count >= countIncmincurrency) {
+                        System.out.println("BERRRRY GOOD");
+                        robot.mouseMove(83, 496);
+                        leftClick();
+                        int sleepTIme = 15000;
+                        while (sleepTIme > 0) {
+                            listenerForTradeCalncel.listenOntime(sleepTIme);
+                            if (listenerForTradeCalncel.lastString.contains("Trade accepted.")
+                                    ||listenerForTradeCalncel.lastString.contains("Trade cancelled")) {
+                                this.openStash();
+                                break;
+                            }
+                            else
+                                break;
+                        }
+                        this.openStash();
+                        robot.mouseMove(358, 495);
+                        leftClick();
+                    } else {
+                        this.openStash();
+                        robot.mouseMove(358, 495);
+                        leftClick();
+                    }
+
+                } catch (UnsupportedFlavorException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
-        } catch (Exception e) {
-            System.err.println(e);
         }
 
     }
@@ -484,7 +561,7 @@ public class JavaRobot {
         }
     }
 
-    public void antiAFK(){
+    public void antiAFK() {
         try {
             this.robot = new Robot();
             robot.setAutoDelay(40);
@@ -501,7 +578,7 @@ public class JavaRobot {
             type("/afkoff");
             robot.keyPress(KeyEvent.VK_ENTER);
             robot.keyRelease(KeyEvent.VK_ENTER);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println(e);
         }
     }

@@ -9,7 +9,7 @@ import java.util.List;
 public class LogListener {
     List<String> StringsInLog = null;
     String path;
-    String lastString;
+    String lastString = "1";
     File log;
     int timeIndex = 500;
 
@@ -39,9 +39,30 @@ public class LogListener {
             String buff = StringsInLog.get(StringsInLog.size() - 1);                //get last String in ACTUAL filelog
             if (!lastString.equals(buff)) {                                         //is lastString changed?
                 lastString = buff;
-                System.out.println("New String in log:\n\t" + lastString);        //show new string
+                //System.out.println("New String in log:\n\t" + lastString);        //show new string
                 break;
             }
+            try {
+                Thread.sleep(timeIndex);
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+
+    void listenOntime(int time){
+        while (time > 0) {
+            try {
+                StringsInLog = Files.readAllLines(Paths.get(path));                     //reinit linked file
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String buff = StringsInLog.get(StringsInLog.size() - 1);                //get last String in ACTUAL filelog
+            if (!lastString.equals(buff)) {                                         //is lastString changed?
+                lastString = buff;
+                //System.out.println("New String in log:\n\t" + lastString);        //show new string
+                break;
+            }
+            time -= timeIndex;
             try {
                 Thread.sleep(timeIndex);
             } catch (InterruptedException e) {

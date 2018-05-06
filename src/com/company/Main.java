@@ -19,6 +19,9 @@ public class Main {
 
     public static void main(String[] args) {
         new Main().getPath();
+        System.out.println("Enter path to CLient.txt");
+        Scanner scanner = new Scanner(System.in);
+        pathLog = scanner.nextLine();
         new Main().listenCMD();
     }
 

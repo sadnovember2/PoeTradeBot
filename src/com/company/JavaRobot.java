@@ -7,6 +7,7 @@ import com.company.tables.xyCurrencyTab;
 import com.company.utils.KeyboardKeys;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -78,31 +79,30 @@ public class JavaRobot {
     }
 
     private void type(String s) {
+        StringSelection stringSelection = new StringSelection(s);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, stringSelection);
+
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        /*
         try {
             KeyboardKeys kk = new KeyboardKeys();
-            /*
-            byte[] bytes = s.getBytes();
-            for (byte b : bytes) {
-                int code = b;
-                // keycode only handles [A-Z] (which is ASCII decimal [65-90])
-                if (code > 96 && code < 123) code = code - 32;
-                {
-                    robot.delay(40);
-                    robot.keyPress(code);
-                    robot.keyRelease(code);
-                }
-                if (code == 95) {
-                    robot.delay(40);
-                    robot.keyPress(523);
-                    robot.keyRelease(523);
-                }
-                */
+
             for (int i = 0; i < s.length(); i++) {
                 kk.keyPress(s.charAt(i));
             }
         } catch (Exception e) {
             System.err.print(e);
         }
+        */
     }
 
     public void tryToTrade() {                      //tradeProcedure
@@ -258,10 +258,12 @@ public class JavaRobot {
 
             int chaos = 0;
             int[] countAtm = new int[currencyTable.currencies.size()];
+            String temp ="Rarity: Currency " + "Scroll of Wisdom " + "-------- " + "Stack Size: 40/40 " + "--------";
             for (int i = 0; i < stashTab.currencyTab.size(); i++) {
                 String name = stashTab.currencyTab.get(i).name;
                 for (int j = 0; j < currencyTable.currencies.size(); j++) {
                     if (name.equals(currencyTable.currencies.get(j).nameWhatToSell.toLowerCase())) {
+                        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(temp), null);
                         robot.mouseMove(stashTab.currencyTab.get(i).x, stashTab.currencyTab.get(i).y);
                         robot.keyPress(KeyEvent.VK_CONTROL);
                         robot.delay(40);
@@ -270,9 +272,14 @@ public class JavaRobot {
                         robot.keyRelease(KeyEvent.VK_C);
                         robot.keyRelease(KeyEvent.VK_CONTROL);
                         String infoCurrency = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString();
-                        infoCurrency = infoCurrency.substring(infoCurrency.indexOf("Stack Size: ") + "Stack Size: ".length(), infoCurrency.indexOf("/"));
-                        countAtm[i] = Integer.parseInt(infoCurrency);
-                        chaos = countAtm[i];
+                        if (!infoCurrency.contains("Scroll of Wisdom")) {
+                            infoCurrency = infoCurrency.substring(infoCurrency.indexOf("Stack Size: ") + "Stack Size: ".length(), infoCurrency.indexOf("/"));
+                            countAtm[i] = Integer.parseInt(infoCurrency);
+                            chaos = countAtm[i];
+                        }else {
+                            countAtm[i] = 0;
+                            chaos = 0;
+                        }
                     }
                 }
             }
